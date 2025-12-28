@@ -7,8 +7,7 @@ import { Input } from '@/components/ui/input';
 import { CarCard } from '@/components/CarCard';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { ArrowRight, Search, Shield, Clock, Award, Star, ChevronRight, CheckCircle2, Zap, MapPin } from 'lucide-react';
-import heroCarImage from '@/assets/hero-car.jpg';
+import { ArrowRight, Shield, Clock, Award, Star, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { Car as CarType } from '@/types';
 
 interface IndexPageProps {
@@ -43,191 +42,268 @@ export default function Index({ user, onLogout }: IndexPageProps) {
   });
 
   const features = [
-    { 
-        icon: Shield, 
-        title: 'Fully Insured', 
-        description: 'Drive with total peace of mind knowing you are fully covered.',
-        color: 'text-blue-500',
-        bg: 'bg-blue-500/10'
+    {
+      icon: Shield,
+      title: 'Fully Insured',
+      description: 'Every rental comes with comprehensive insurance coverage. Drive with total peace of mind.',
     },
-    { 
-        icon: Clock, 
-        title: '24/7 Support', 
-        description: 'Our dedicated team is always here to assist you, day or night.',
-        color: 'text-green-500',
-        bg: 'bg-green-500/10'
+    {
+      icon: Clock,
+      title: '24/7 Support',
+      description: 'Our dedicated concierge team is always available to assist you, day or night.',
     },
-    { 
-        icon: Award, 
-        title: 'Premium Fleet', 
-        description: 'Experience the thrill of driving the world\'s finest automobiles.',
-        color: 'text-purple-500',
-        bg: 'bg-purple-500/10'
+    {
+      icon: Award,
+      title: 'Premium Fleet',
+      description: 'Access an exclusive collection of high-end vehicles maintained to showroom standards.',
     },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background font-sans selection:bg-primary/20">
       <Navbar user={user} onLogout={onLogout} />
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 lg:pt-32 lg:pb-40 overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 z-0">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/20 blur-[100px] -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-secondary/20 blur-[100px] translate-y-1/2 -translate-x-1/2" />
-            <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+      {/* Hero Section - Dark & Premium */}
+      <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-[#0a0a0a] text-white">
+        {/* Abstract Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-primary/20 blur-[120px] opacity-40 mix-blend-screen" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-600/20 blur-[150px] opacity-30 mix-blend-screen" />
+          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
         </div>
 
-        <div className="container relative z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                {/* Text Content */}
-                <div className="flex-1 text-center lg:text-left space-y-8 animate-fade-in-up">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-semibold uppercase tracking-wider">
-                        <Star className="h-3 w-3 fill-secondary" />
-                        #1 Premium Car Rental in India
-                    </div>
-                    
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                        Drive the 
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600"> Extraordinary</span>
-                    </h1>
-                    
-                    <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Unleash your journey with our curated collection of luxury and sports cars. 
-                        Experience performance, comfort, and style like never before.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                        <Button size="xl" className="text-lg px-8 h-14 shadow-lg hover:shadow-primary/25 transition-all" asChild>
-                            <Link to="/cars">
-                                Browse Fleet
-                                <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                        </Button>
-                        <Button size="xl" variant="outline" className="text-lg px-8 h-14 bg-background/50 hover:bg-background/80 backdrop-blur-sm" asChild>
-                            <Link to={user ? "/bookings" : "/auth"}>
-                                {user ? "My Bookings" : "Sign Up Now"}
-                            </Link>
-                        </Button>
-                    </div>
-
-                    <div className="pt-8 flex items-center justify-center lg:justify-start gap-8 text-sm font-medium text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-success" />
-                            <span>No Hidden Charges</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-success" />
-                            <span>Verified Cars</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Hero Image */}
-                <div className="flex-1 relative w-full max-w-[600px] lg:max-w-none">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 to-purple-500/30 rounded-full blur-[80px] animate-pulse-slow" />
-                    <img 
-                        src="https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop" 
-                        alt="Luxury Sports Car" 
-                        className="relative z-10 w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-out"
-                    />
-                    
-                    {/* Floating Cards */}
-                    <div className="absolute -bottom-6 -left-6 bg-card/80 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl hidden sm:block animate-float">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-success/20 p-2 rounded-lg text-success">
-                                <Zap className="h-5 w-5" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground">0-100 km/h</p>
-                                <p className="font-bold">2.9s</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div className="container relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Text Content */}
+          <div className="space-y-8 animate-fade-up">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-sm font-medium text-gray-300">
+              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              <span>#1 Luxury Car Rental Service</span>
             </div>
+
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9]">
+              Drive the <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 animate-shimmer bg-[length:200%_auto]">Extraordinary</span>
+            </h1>
+
+            <p className="text-xl sm:text-2xl text-gray-400 max-w-lg leading-relaxed font-light">
+              Unleash your journey with our curated collection of luxury and sports cars. Unmatched performance, undeniable style.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-6 pt-6">
+              <Button size="xl" className="h-16 px-10 text-xl rounded-full bg-[#facc15] hover:bg-[#eab308] text-black shadow-[0_0_40px_-10px_rgba(250,204,21,0.5)] hover:scale-105 transition-all duration-300 font-bold tracking-wide" asChild>
+                <Link to="/cars">
+                  Browse Fleet <ArrowRight className="ml-2 h-6 w-6" />
+                </Link>
+              </Button>
+
+              <Button size="xl" variant="outline" className="h-16 px-10 text-xl rounded-full border-white/20 bg-white/5 hover:bg-white/10 text-white backdrop-blur-md hover:scale-105 transition-all duration-300 font-medium" asChild>
+                <Link to="/bookings">
+                  My Bookings
+                </Link>
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-8 pt-8 text-base text-gray-500 font-medium">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-[#facc15]" />
+                <span>Instant Booking</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-[#facc15]" />
+                <span>Fully Insured</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="relative lg:h-[700px] flex items-center justify-center animate-slide-in-right">
+            {/* Spotlight Effect */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(closest-side,rgba(234,179,8,0.15),transparent)] blur-3xl -z-10 rounded-full" />
+
+            <div className="relative z-10 w-[120%] hover:scale-[1.02] transition-transform duration-700 ease-out">
+              <img
+                src="https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=2070&auto=format&fit=crop"
+                alt="White Lamborghini"
+                className="w-full h-auto object-cover rounded-[2.5rem] border border-white/10 shadow-2xl drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
+              />
+            </div>
+            {/* Decorative Elements */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[50%] bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-3xl -z-10 rounded-full" />
+          </div>
         </div>
       </section>
 
-      {/* Featured Cars Section */}
-      <section className="py-24 bg-muted/30 relative">
+
+      {/* Trusted Brands Marquee */}
+      <section className="bg-black border-y border-white/10 py-10 overflow-hidden">
+        <div className="relative w-full max-w-7xl mx-auto px-4">
+          <div className="flex overflow-hidden group">
+            <div className="flex space-x-20 animate-marquee whitespace-nowrap items-center">
+              {[
+                { name: 'BMW', url: 'https://cdn.simpleicons.org/bmw' },
+                { name: 'Mercedes', url: 'https://cdn.simpleicons.org/mercedes' },
+                { name: 'Audi', url: 'https://cdn.simpleicons.org/audi' },
+                { name: 'Porsche', url: 'https://cdn.simpleicons.org/porsche' },
+                { name: 'Tesla', url: 'https://cdn.simpleicons.org/tesla' },
+                { name: 'Land Rover', url: 'https://cdn.simpleicons.org/landrover' },
+                { name: 'Range Rover', url: 'https://cdn.simpleicons.org/landrover' },
+                { name: 'Ferrari', url: 'https://cdn.simpleicons.org/ferrari' },
+                { name: 'Lamborghini', url: 'https://cdn.simpleicons.org/lamborghini' },
+                { name: 'Bentley', url: 'https://cdn.simpleicons.org/bentley' },
+                { name: 'Rolls Royce', url: 'https://cdn.simpleicons.org/rollsroyce' },
+                { name: 'Aston Martin', url: 'https://cdn.simpleicons.org/astonmartin' },
+                { name: 'Jaguar', url: 'https://cdn.simpleicons.org/jaguar' },
+                { name: 'Lexus', url: 'https://cdn.simpleicons.org/lexus' },
+                { name: 'McLaren', url: 'https://cdn.simpleicons.org/mclaren' },
+                { name: 'Bugatti', url: 'https://cdn.simpleicons.org/bugatti' },
+                { name: 'Maserati', url: 'https://cdn.simpleicons.org/maserati' },
+                { name: 'Jeep', url: 'https://cdn.simpleicons.org/jeep' },
+                { name: 'Volvo', url: 'https://cdn.simpleicons.org/volvo' },
+                { name: 'Toyota', url: 'https://cdn.simpleicons.org/toyota' },
+                { name: 'Honda', url: 'https://cdn.simpleicons.org/honda' },
+                { name: 'Ford', url: 'https://cdn.simpleicons.org/ford' },
+                { name: 'Chevrolet', url: 'https://cdn.simpleicons.org/chevrolet' },
+                { name: 'Nissan', url: 'https://cdn.simpleicons.org/nissan' },
+                { name: 'Volkswagen', url: 'https://cdn.simpleicons.org/volkswagen' },
+                { name: 'Hyundai', url: 'https://cdn.simpleicons.org/hyundai' },
+                { name: 'Kia', url: 'https://cdn.simpleicons.org/kia' },
+                { name: 'Mazda', url: 'https://cdn.simpleicons.org/mazda' },
+                { name: 'Mahindra', url: 'https://cdn.simpleicons.org/mahindra' },
+                { name: 'Maruti Suzuki', url: 'https://cdn.simpleicons.org/marutisuzuki' },
+                { name: 'Tata', url: 'https://cdn.simpleicons.org/tatamotors' },
+                { name: 'Citroen', url: 'https://cdn.simpleicons.org/citroen' },
+                { name: 'Alfa Romeo', url: 'https://cdn.simpleicons.org/alfaromeo' },
+                { name: 'Genesis', url: 'https://cdn.simpleicons.org/genesis' },
+                { name: 'Infiniti', url: 'https://cdn.simpleicons.org/infiniti' },
+                { name: 'Acura', url: 'https://cdn.simpleicons.org/acura' },
+                { name: 'Maybach', url: 'https://cdn.simpleicons.org/maybach' },
+                { name: 'Lincoln', url: 'https://cdn.simpleicons.org/lincoln' },
+                { name: 'Cadillac', url: 'https://cdn.simpleicons.org/cadillac' },
+                { name: 'DS Automobiles', url: 'https://cdn.simpleicons.org/dsautomobiles' },
+                { name: 'Hummer', url: 'https://cdn.simpleicons.org/hummer' },
+                { name: 'GMC', url: 'https://cdn.simpleicons.org/gmc' },
+                { name: 'Dodge', url: 'https://cdn.simpleicons.org/dodge' },
+                { name: 'RAM Trucks', url: 'https://cdn.simpleicons.org/ram' },
+                { name: 'Subaru', url: 'https://cdn.simpleicons.org/subaru' },
+                { name: 'Lucid Motors', url: 'https://cdn.simpleicons.org/lucidmotors' },
+                { name: 'Rivian', url: 'https://cdn.simpleicons.org/rivian' },
+                { name: 'Polestar', url: 'https://cdn.simpleicons.org/polestar' },
+                { name: 'NIO', url: 'https://cdn.simpleicons.org/nio' },
+                { name: 'BYD', url: 'https://cdn.simpleicons.org/byd' },
+                { name: 'Xpeng', url: 'https://cdn.simpleicons.org/xpeng' },
+                { name: 'Fisker', url: 'https://cdn.simpleicons.org/fisker' },
+                { name: 'VinFast', url: 'https://cdn.simpleicons.org/vinfast' },
+                { name: 'Force Motors', url: 'https://cdn.simpleicons.org/forcemotors' },
+                { name: 'Ashok Leyland', url: 'https://cdn.simpleicons.org/ashokleyland' },
+                { name: 'Eicher', url: 'https://cdn.simpleicons.org/eicher' },
+                { name: 'MG Motor India', url: 'https://cdn.simpleicons.org/mg' }
+              ].map((brand, i) => (
+                <div key={i} className="flex items-center justify-center min-w-[100px] h-20 cursor-default group/brand px-4">
+                  <img
+                    src={brand.url}
+                    alt={brand.name}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      // Fallback to Google Favicon if SimpleIcons fails
+                      let domain = brand.name.toLowerCase().replace(/ /g, '') + '.com';
+                      if (brand.name === 'Mercedes') domain = 'mercedes-benz.com';
+                      if (brand.name === 'Rolls Royce') domain = 'rolls-roycemotorcars.com';
+                      if (brand.name === 'Tata') domain = 'tatamotors.com';
+                      target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                    }}
+                    className="h-10 w-10 object-contain brightness-0 invert opacity-60 group-hover/brand:filter-none group-hover/brand:opacity-100 transition-all duration-500"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us - Glassmorphism on Dark */}
+      <section className="py-24 bg-[#0F0F0F] text-white overflow-hidden relative">
+        {/* Subtle Grid Background */}
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02]" />
+
+        <div className="container relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">Why Choose DriveYoo?</h2>
+            <p className="text-gray-400 text-lg">We don't just rent cars; we deliver unparalleled driving experiences.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="group p-8 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/[0.08] hover:border-white/10 transition-all duration-500 hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center mb-6 group-hover:border-yellow-500/30 group-hover:shadow-[0_0_30px_-5px_rgba(234,179,8,0.3)] transition-all duration-500">
+                  <feature.icon className="h-8 w-8 text-white group-hover:text-yellow-400 transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-100">{feature.title}</h3>
+                <p className="text-gray-400 leading-relaxed font-light">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Cars Section - Light/Grey Contrast */}
+      <section className="py-24 bg-gray-50">
         <div className="container">
           <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-            <div className="flex-1">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Vehicles</h2>
-              <p className="text-lg text-muted-foreground">Hand-picked selection of our finest cars, ready for your next adventure.</p>
+            <div className="space-y-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Featured Vehicles</h2>
+              <p className="text-lg text-gray-500">Hand-picked selection of our finest cars.</p>
             </div>
-            <Button variant="ghost" className="group hidden md:flex" asChild>
-              <Link to="/cars" className="text-primary text-lg">
-                View All Cars
-                <ChevronRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            <Button variant="outline" className="hidden md:flex group border-gray-300 hover:bg-gray-100 text-gray-900" asChild>
+              <Link to="/cars">
+                View Gallery <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {featuredCars.length > 0 ? (
-                featuredCars.map((car) => (
-                    <CarCard key={car.id} car={car} />
-                ))
+              featuredCars.map((car) => (
+                <CarCard key={car.id} car={car} className="bg-white border-0 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500" />
+              ))
             ) : (
-                // Skeleton/Loading State
-                [1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-[350px] bg-card/50 rounded-xl animate-pulse" />
-                ))
+              [1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-[350px] bg-white rounded-3xl animate-pulse shadow-sm" />
+              ))
             )}
           </div>
 
           <div className="mt-12 text-center md:hidden">
-            <Button size="lg" variant="outline" className="w-full" asChild>
-              <Link to="/cars">View All Cars</Link>
+            <Button size="lg" variant="outline" className="w-full border-gray-300" asChild>
+              <Link to="/cars">View Gallery</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Value Proposition / Features */}
-      <section className="py-24 bg-background">
-        <div className="container">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose DriveYoo?</h2>
-                <p className="text-muted-foreground text-lg">We don't just rent cars; we deliver experiences. Here is what sets us apart.</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-                {features.map((feature, index) => (
-                    <div key={index} className="group p-8 rounded-2xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-card-hover transition-all duration-300">
-                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 text-2xl ${feature.bg} ${feature.color} group-hover:scale-110 transition-transform duration-300`}>
-                            <feature.icon className="h-7 w-7" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                        <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                    </div>
-                ))}
-            </div>
+      {/* Modern CTA Section */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-black">
+          <img
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80"
+            className="w-full h-full object-cover opacity-40 mix-blend-luminosity fixed-background"
+            alt="Driving"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-primary/90">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80')] bg-cover bg-center mix-blend-overlay opacity-20" />
-        </div>
-        
-        <div className="container relative z-10 text-center text-primary-foreground">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+        <div className="container relative z-10 text-center text-white">
+          <div className="max-w-3xl mx-auto space-y-8 animate-fade-in-up">
+            <h2 className="text-4xl sm:text-6xl font-bold tracking-tight">
               Ready to Hit the Road?
             </h2>
-            <p className="text-xl opacity-90 leading-relaxed">
-              Join thousands of satisfied customers who trust DriveYoo for their premium car rental needs. Your dream car is just a click away.
+            <p className="text-xl text-gray-300 leading-relaxed font-light">
+              Join thousands of satisfied customers who trust DriveYoo for their premium car rental needs.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-              <Button size="xl" variant="secondary" className="text-lg px-10 h-16 shadow-2xl" asChild>
+            <div className="pt-8">
+              <Button size="xl" className="h-16 px-12 text-lg rounded-full bg-white text-black hover:bg-gray-100 transition-all font-semibold shadow-[0_0_40px_-5px_rgba(255,255,255,0.3)] hover:scale-105" asChild>
                 <Link to="/cars">
-                  Book Now
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Start Your Journey
                 </Link>
               </Button>
             </div>

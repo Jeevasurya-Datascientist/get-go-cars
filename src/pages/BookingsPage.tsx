@@ -57,29 +57,59 @@ export function BookingsPage({ user, onLogout }: BookingsPageProps) {
 
       if (error) throw error;
 
-      return data.map((booking: any) => ({
-        id: booking.id,
-        carId: booking.car_id,
-        userId: booking.user_id,
-        startDate: booking.start_date,
-        endDate: booking.end_date,
-        totalPrice: booking.total_price,
-        status: booking.status,
-        rating: booking.rating,
-        cancellationReason: booking.cancellation_reason,
-        car: {
-          ...booking.car,
-          pricePerDay: booking.car.price_per_day,
-          fuelType: booking.car.fuel_type,
-          images: booking.car.images || [],
-          features: booking.car.features || [],
-          registrationNumber: booking.car.registration_number
-        },
-        user: {
-          name: user.user_metadata?.full_name || 'User',
-          email: user.email
+      return data.map((booking: any) => {
+        // Handle orphaned bookings (car deleted)
+        if (!booking.car) {
+          return {
+            id: booking.id,
+            carId: booking.car_id,
+            userId: booking.user_id,
+            startDate: booking.start_date,
+            endDate: booking.end_date,
+            totalPrice: booking.total_price,
+            status: 'cancelled', // Force status to cancelled or unknown
+            rating: booking.rating,
+            cancellationReason: 'Car no longer available',
+            car: {
+              brand: 'Unknown',
+              model: 'Vehicle Removed',
+              pricePerDay: 0,
+              fuelType: 'N/A',
+              images: [],
+              features: [],
+              registrationNumber: 'N/A'
+            },
+            user: {
+              name: user.user_metadata?.full_name || 'User',
+              email: user.email
+            }
+          };
         }
-      }));
+
+        return {
+          id: booking.id,
+          carId: booking.car_id,
+          userId: booking.user_id,
+          startDate: booking.start_date,
+          endDate: booking.end_date,
+          totalPrice: booking.total_price,
+          status: booking.status,
+          rating: booking.rating,
+          cancellationReason: booking.cancellation_reason,
+          car: {
+            ...booking.car,
+            pricePerDay: booking.car.price_per_day,
+            fuelType: booking.car.fuel_type,
+            images: booking.car.images || [],
+            features: booking.car.features || [],
+            registrationNumber: booking.car.registration_number
+          },
+          user: {
+            name: user.user_metadata?.full_name || 'User',
+            email: user.email
+          }
+        };
+      });
     },
     enabled: !!user
   });
@@ -254,8 +284,24 @@ export function BookingsPage({ user, onLogout }: BookingsPageProps) {
                               <div className="flex items-center gap-3">
                                 <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
                                 <div className="text-sm">
-                                  <p className="font-medium">{format(new Date(booking.startDate), 'MMM dd, yyyy')} - {format(new Date(booking.endDate), 'MMM dd, yyyy')}</p>
-                                  <p className="text-muted-foreground text-xs">Duration: {Math.ceil((new Date(booking.endDate).getTime() - new Date(booking.startDate).getTime()) / (1000 * 60 * 60 * 24))} Days</p>
+                                  <p className="font-medium">
+                                    {(() => {
+                                      try {
+                                        return `${format(new Date(booking.startDate), 'MMM dd, yyyy')} - ${format(new Date(booking.endDate), 'MMM dd, yyyy')}`;
+                                      } catch (e) {
+                                        return 'Date Unavailable';
+                                      }
+                                    })()}
+                                  </p>
+                                  <p className="text-muted-foreground text-xs">
+                                    Duration: {(() => {
+                                      try {
+                                        return Math.ceil((new Date(booking.endDate).getTime() - new Date(booking.startDate).getTime()) / (1000 * 60 * 60 * 24));
+                                      } catch (e) {
+                                        return 0;
+                                      }
+                                    })()} Days
+                                  </p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">

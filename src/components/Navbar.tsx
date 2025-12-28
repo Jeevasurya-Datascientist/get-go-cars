@@ -42,13 +42,18 @@ export function Navbar({ user, onLogout }: NavbarProps) {
       { path: '/contact', label: 'Contact' },
     ];
 
+  const isHome = location.pathname === '/';
+  const isTransparent = isHome && !scrolled;
+
   return (
     <nav
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm"
-          : "bg-transparent border-transparent pt-4"
+          ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm text-foreground"
+          : isHome
+            ? "bg-transparent border-transparent pt-4 text-white"
+            : "bg-transparent border-transparent pt-4 text-foreground"
       )}
     >
       <div className={cn("container flex items-center justify-between transition-all", scrolled ? "h-16" : "h-20")}>
@@ -58,11 +63,16 @@ export function Navbar({ user, onLogout }: NavbarProps) {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg group-hover:shadow-primary/25 transition-all duration-300">
             <span className="font-extrabold text-xl">D</span>
           </div>
-          <span className="font-bold text-xl tracking-tight">DriveYoo</span>
+          <span className={cn("font-bold text-xl tracking-tight transition-colors", isTransparent ? "text-white" : "text-foreground")}>DriveYoo</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-1 bg-background/50 backdrop-blur-sm px-2 py-1 rounded-full border border-border/50 shadow-sm">
+        <div className={cn(
+          "hidden md:flex items-center gap-1 px-2 py-1 rounded-full border shadow-sm transition-all",
+          isTransparent
+            ? "bg-white/10 backdrop-blur-md border-white/10"
+            : "bg-background/50 backdrop-blur-sm border-border/50"
+        )}>
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -71,7 +81,9 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 "px-5 py-2 rounded-full text-sm font-medium transition-all duration-200",
                 isActive(link.path)
                   ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  : isTransparent
+                    ? "text-gray-200 hover:text-white hover:bg-white/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
               {link.label}
@@ -82,26 +94,26 @@ export function Navbar({ user, onLogout }: NavbarProps) {
         {/* User Actions */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div className="flex items-center gap-3 pl-4 border-l border-border/50">
+            <div className={cn("flex items-center gap-3 pl-4 border-l transition-colors", isTransparent ? "border-white/20" : "border-border/50")}>
               <Link to='/profile'>
                 <div className="flex items-center gap-3 group cursor-pointer">
                   <div className="text-right hidden lg:block">
-                    <p className="text-sm font-medium leading-none group-hover:text-primary transition-colors">{user.name}</p>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider scale-90 origin-right">{user.role}</p>
+                    <p className={cn("text-sm font-medium leading-none transition-colors", isTransparent ? "text-white group-hover:text-gray-200" : "text-foreground group-hover:text-primary")}>{user.name}</p>
+                    <p className={cn("text-xs uppercase tracking-wider scale-90 origin-right", isTransparent ? "text-gray-300" : "text-muted-foreground")}>{user.role}</p>
                   </div>
-                  <Avatar className="h-9 w-9 border-2 border-background shadow-sm group-hover:border-primary transition-colors">
+                  <Avatar className={cn("h-9 w-9 border-2 shadow-sm transition-colors", isTransparent ? "border-white/20 group-hover:border-white" : "border-background group-hover:border-primary")}>
                     <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`} />
                     <AvatarFallback>{user.name[0]}</AvatarFallback>
                   </Avatar>
                 </div>
               </Link>
-              <Button variant="ghost" size="icon" onClick={onLogout} title="Logout" className="rounded-full hover:bg-destructive/10 hover:text-destructive">
+              <Button variant="ghost" size="icon" onClick={onLogout} title="Logout" className={cn("rounded-full transition-colors", isTransparent ? "text-white hover:bg-white/20 hover:text-white" : "hover:bg-destructive/10 hover:text-destructive")}>
                 <LogOut className="h-5 w-5" />
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <Link to="/auth" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/auth" className={cn("text-sm font-medium transition-colors hover:opacity-80", isTransparent ? "text-white" : "text-foreground hover:text-primary")}>
                 Login
               </Link>
               <Button className="rounded-full px-6 shadow-gold hover:shadow-gold/50 transition-shadow" asChild>
@@ -113,7 +125,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+          className={cn("md:hidden p-2 rounded-lg transition-colors", isTransparent ? "text-white hover:bg-white/20" : "hover:bg-muted text-foreground")}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
