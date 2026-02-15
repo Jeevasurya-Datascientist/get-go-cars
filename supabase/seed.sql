@@ -24,7 +24,7 @@ FROM
             VALUES 
                 ('BMW', 'M3', 'Sports', 'gasoline', 'automatic', 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2670&auto=format&fit=crop'),
                 ('BMW', 'X5', 'SUV', 'diesel', 'automatic', 'https://images.unsplash.com/photo-1555215695-3004980adade?q=80&w=2670&auto=format&fit=crop'),
-                ('Mercedes', 'C-Class', 'Sedan', 'gasoline', 'automatic', 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2670&auto=format&fit=crop'),
+                ('Mercedes', 'C-Class', 'Sedan', 'gasoline', 'automatic', 'https://unsplash.com/photos/a-silver-sports-car-driving-down-a-street-next-to-palm-trees-hoBxOMee0yg?q=80&w=2670&auto=format&fit=crop'),
                 ('Mercedes', 'G-Wagon', 'SUV', 'gasoline', 'automatic', 'https://images.unsplash.com/photo-1520031441872-26514dd97040?q=80&w=2670&auto=format&fit=crop'),
                 ('Audi', 'RS6', 'Sports', 'gasoline', 'automatic', 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?q=80&w=2670&auto=format&fit=crop'),
                 ('Audi', 'Q7', 'SUV', 'diesel', 'automatic', 'https://images.unsplash.com/photo-1541348263662-e068662d82af?q=80&w=2544&auto=format&fit=crop'),

@@ -114,7 +114,7 @@ export function AdminIncidentsPage({ user, onLogout }: AdminIncidentsPageProps) 
                     .neq('status', 'cancelled')
                     .order('created_at', { ascending: false })
                     .limit(1)
-                    .single();
+                    .maybeSingle();
 
                 if (booking) {
                     bookingId = booking.id;

@@ -12,7 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 export function AuthPage() {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('mode') === 'register' ? 'register' : 'login';
@@ -30,13 +30,10 @@ export function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const { data: { user }, error } = await supabase.auth.signInWithPassword({
-        email: loginForm.email,
-        password: loginForm.password,
-      });
+      await login(loginForm.email, loginForm.password);
 
-      if (error) throw error;
-
+      // Check user role for redirect based on context or fetch
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
         toast({ title: "Welcome back!", description: "Engine started. You have successfully logged in." });
@@ -61,7 +58,10 @@ export function AuthPage() {
       const { error } = await supabase.auth.signUp({
         email: registerForm.email,
         password: registerForm.password,
-        options: { data: { full_name: registerForm.name } },
+        options: {
+          data: { full_name: registerForm.name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        },
       });
 
       if (error) throw error;

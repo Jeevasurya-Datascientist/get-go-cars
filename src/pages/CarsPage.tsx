@@ -30,12 +30,32 @@ export function CarsPage({ user, onLogout }: CarsPageProps) {
         .neq('status', 'rented')
         .neq('status', 'sold'); // Just in case we add sold later
 
+      if (filters.searchQuery) {
+        query = query.or(`brand.ilike.%${filters.searchQuery}%,model.ilike.%${filters.searchQuery}%`);
+      }
       if (filters.brand) query = query.eq('brand', filters.brand);
       if (filters.type) query = query.eq('type', filters.type);
       if (filters.fuelType) query = query.eq('fuel_type', filters.fuelType);
+      if (filters.transmission) query = query.eq('transmission', filters.transmission);
       if (filters.seats) query = query.gte('seats', filters.seats);
       if (filters.minPrice) query = query.gte('price_per_day', filters.minPrice);
       if (filters.maxPrice) query = query.lte('price_per_day', filters.maxPrice);
+
+      if (filters.features && filters.features.length > 0) {
+        query = query.contains('features', filters.features);
+      }
+
+      // Sorting
+      if (filters.sortBy === 'price_asc') {
+        query = query.order('price_per_day', { ascending: true });
+      } else if (filters.sortBy === 'price_desc') {
+        query = query.order('price_per_day', { ascending: false });
+      } else if (filters.sortBy === 'rating') {
+        query = query.order('rating', { ascending: false });
+      } else {
+        // Default to newest
+        query = query.order('created_at', { ascending: false });
+      }
 
       const { data, error } = await query;
 

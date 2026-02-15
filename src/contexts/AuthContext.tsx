@@ -8,6 +8,7 @@ interface AuthContextType {
     session: Session | null;
     user: AppUser | null;
     loading: boolean;
+    login: (email: string, password: string) => Promise<void>;
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
 }
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             if (session?.user) {
-                fetchProfile(session.user.id);
+                fetchProfile(session.user.id, session.user);
             } else {
                 setUser(null);
                 setLoading(false);
@@ -46,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => subscription.unsubscribe();
     }, []);
 
-    const fetchProfile = async (userId: string) => {
+    const fetchProfile = async (userId: string, sessionUser?: User) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
@@ -62,16 +63,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setUser({
                     id: data.id,
                     name: data.full_name || 'User',
-                    email: session?.user.email || '',
+                    email: sessionUser?.email || session?.user.email || '',
                     role: data.role || 'customer',
                     profileImage: data.avatar_url,
                     createdAt: new Date(data.created_at || Date.now()),
                 });
+            } else if (sessionUser) {
+                // Self-healing: Create profile if missing
+                console.log('Profile missing, creating new profile...');
+                const newProfile = {
+                    id: userId,
+                    full_name: sessionUser.user_metadata?.full_name || 'User',
+                    avatar_url: sessionUser.user_metadata?.avatar_url,
+                    role: 'customer'
+                };
+
+                const { error: insertError } = await supabase
+                    .from('profiles')
+                    .insert([newProfile]);
+
+                if (!insertError) {
+                    setUser({
+                        id: newProfile.id,
+                        name: newProfile.full_name,
+                        email: sessionUser.email || '',
+                        role: 'customer',
+                        profileImage: newProfile.avatar_url,
+                        createdAt: new Date()
+                    });
+                }
             }
         } catch (error) {
             console.error('Error in fetchProfile:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const login = async (email: string, password: string) => {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) throw error;
+
+        if (data.session && data.user) {
+            setSession(data.session);
+            await fetchProfile(data.user.id, data.user);
         }
     };
 
@@ -93,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ session, user, loading, signInWithGoogle, signOut }}>
+        <AuthContext.Provider value={{ session, user, loading, login, signInWithGoogle, signOut }}>
             {loading ? (
                 <div className="fixed inset-0 flex items-center justify-center bg-background">
                     <CarLoader size="lg" label="Loading application..." />

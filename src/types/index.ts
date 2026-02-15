@@ -76,6 +76,10 @@ export interface Maintenance {
 }
 
 export interface SearchFilters {
+  searchQuery?: string;
+  transmission?: 'automatic' | 'manual';
+  features?: string[];
+  sortBy?: 'price_asc' | 'price_desc' | 'newest' | 'rating';
   type?: CarType;
   brand?: string;
   minPrice?: number;

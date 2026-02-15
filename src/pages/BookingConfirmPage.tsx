@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import QRCode from 'react-qr-code';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Navbar } from '@/components/Navbar';
@@ -13,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   ChevronLeft, CreditCard, Wallet, CheckCircle2,
   Calendar, MapPin, ArrowRight, Tag, Smartphone, QrCode,
-  Upload, User, FileText, AlertCircle
+  Upload, User, FileText, AlertCircle, X
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
@@ -40,7 +41,7 @@ export function BookingConfirmPage({ user, onLogout }: BookingConfirmPageProps) 
 
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'wallet' | 'upi'>('upi');
   const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState(false);
+  const [appliedPromoCode, setAppliedPromoCode] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -89,15 +90,28 @@ export function BookingConfirmPage({ user, onLogout }: BookingConfirmPageProps) 
   }
 
   const { car, startDate, endDate, addons, total } = state;
-  const discount = promoApplied ? total * 0.1 : 0;
+
+  // Calculate discount based on the APPLIED code, not the input field
+  const discount = appliedPromoCode === 'jeevasurya' ? total * 0.7 : (appliedPromoCode === 'drive10' ? total * 0.1 : 0);
   const finalTotal = total - discount;
 
   const applyPromoCode = () => {
-    if (promoCode.toLowerCase() === 'drive10') {
-      setPromoApplied(true);
+    const code = promoCode.toLowerCase();
+
+    if (code === 'drive10') {
+      setAppliedPromoCode('drive10');
+      setPromoCode(''); // Clear input
       toast({
         title: "Promo applied!",
         description: "10% discount has been applied to your booking.",
+      });
+    } else if (code === 'jeevasurya') {
+      setAppliedPromoCode('jeevasurya');
+      setPromoCode(''); // Clear input
+      toast({
+        title: "Super Promo applied!",
+        description: "70% discount has been applied! Enjoy the ride.",
+        className: "bg-yellow-500 text-black border-none"
       });
     } else {
       toast({
@@ -470,13 +484,26 @@ export function BookingConfirmPage({ user, onLogout }: BookingConfirmPageProps) 
                           </div>
                         </div>
                         {paymentMethod === 'upi' && (
-                          <div className="mt-3 bg-white p-4 rounded border flex flex-col items-center animate-in fade-in slide-in-from-top-2">
-                            <p className="text-xs font-semibold text-center mb-2 uppercase tracking-wide">Scan to Pay ₹{finalTotal.toFixed(2)}</p>
-                            <img src="/qr-js.jpeg" alt="Pay with UPI" className="w-[220px] h-auto rounded-lg shadow-sm border" />
+                          <div className="mt-3 bg-white p-6 rounded border flex flex-col items-center animate-in fade-in slide-in-from-top-2 w-full max-w-xs">
+                            <p className="text-xs font-semibold text-center mb-4 uppercase tracking-wide text-muted-foreground">Pay to UPI ID</p>
 
-                            <div className="flex gap-4 mt-4 opacity-70">
+                            <div className="bg-white p-2 rounded-lg mb-4 shadow-sm border">
+                              <QRCode
+                                value={`upi://pay?pa=7604865437@axl&pn=JS%20Corporations&cu=INR`}
+                                size={180}
+                                level="H"
+                              />
+                            </div>
+
+                            <div className="bg-slate-100 p-3 rounded-lg w-full text-center border-2 border-dashed border-slate-300">
+                              <p className="text-lg font-bold font-mono tracking-wider select-all">7604865437@axl</p>
+                            </div>
+
+                            <p className="text-sm font-medium mt-4 mb-1">Total Payable: ₹{finalTotal.toFixed(2)}</p>
+
+                            <div className="flex gap-2 mt-4 opacity-70 items-center justify-center">
                               <Smartphone className="h-4 w-4" />
-                              <span className="text-xs">Supported by all UPI apps</span>
+                              <span className="text-xs">Use any UPI app to pay</span>
                             </div>
                           </div>
                         )}
@@ -540,23 +567,46 @@ export function BookingConfirmPage({ user, onLogout }: BookingConfirmPageProps) 
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Enter promo code"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
-                      disabled={promoApplied}
-                    />
-                    <Button
-                      variant="outline"
-                      onClick={applyPromoCode}
-                      disabled={promoApplied || !promoCode}
-                    >
-                      {promoApplied ? <CheckCircle2 className="h-4 w-4 text-success" /> : 'Apply'}
-                    </Button>
-                  </div>
+                  {!!appliedPromoCode ? (
+                    <div className="flex items-center justify-between p-3 border rounded-md bg-green-500/10 border-green-500/20">
+                      <div className="flex items-center gap-2">
+                        <Tag className="h-4 w-4 text-green-600" />
+                        <span className="font-medium text-sm text-green-700">
+                          Code <span className="font-mono font-bold">{appliedPromoCode.toUpperCase()}</span> applied
+                        </span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                        onClick={() => {
+                          setAppliedPromoCode('');
+                          setPromoCode('');
+                          toast({ title: "Promo removed", description: "You can now apply a different code." });
+                        }}
+                      >
+                        <span className="sr-only">Remove</span>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Enter promo code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={applyPromoCode}
+                        disabled={!promoCode}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  )}
                   <p className="text-xs text-muted-foreground mt-2">
-                    Try code: DRIVE10 for 10% off
+                    Try code: <span className="font-mono font-bold text-primary">DRIVE10</span> for 10% off or <span className="font-mono font-bold text-yellow-500">Jeevasurya</span>
                   </p>
                 </CardContent>
               </Card>
@@ -595,9 +645,9 @@ export function BookingConfirmPage({ user, onLogout }: BookingConfirmPageProps) 
                         ))}
                       </>
                     )}
-                    {promoApplied && (
+                    {!!appliedPromoCode && (
                       <div className="flex justify-between text-sm text-success">
-                        <span>Promo discount (10%)</span>
+                        <span>Promo discount ({appliedPromoCode === 'jeevasurya' ? '70%' : '10%'})</span>
                         <span>-₹{discount.toFixed(2)}</span>
                       </div>
                     )}

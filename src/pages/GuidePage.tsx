@@ -154,6 +154,20 @@ export function GuidePage({ user, onLogout }: GuidePageProps) {
                             </div>
                         </div>
                     </div>
+                    {/* JS Corporations Branding */}
+                    <div className="py-24 text-center relative overflow-hidden group cursor-default">
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/5 to-yellow-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+
+                        <h3 className="text-6xl md:text-8xl font-black tracking-tighter opacity-20 select-none blur-[2px] transition-all duration-500 group-hover:blur-0 group-hover:opacity-100">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-br from-slate-700 via-slate-500 to-slate-800 group-hover:from-yellow-400 group-hover:via-orange-500 group-hover:to-yellow-600 transition-all duration-500">
+                                JS CORPORATIONS
+                            </span>
+                        </h3>
+
+                        <p className="mt-4 text-slate-500 font-mono text-sm tracking-[0.5em] uppercase opacity-50 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                            Engineering Excellence
+                        </p>
+                    </div>
                 </div>
             </main>
 

@@ -33,6 +33,7 @@ import { GuidePage } from "./pages/GuidePage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { UpdatePasswordPage } from "./pages/UpdatePasswordPage";
 import NotFound from "./pages/NotFound";
+import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
 
